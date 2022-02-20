@@ -12,7 +12,11 @@ import NewsRouter from '../../components/sandbox/NewsRouter'
 const {Content} = Layout
 
 export default function NewsSandBox() {
+
+    // 页面进度条
     NProgress.start()
+    
+    // 渲染完成，进度条结束
     useEffect(()=>{
         NProgress.done()
     })

@@ -2,17 +2,27 @@ import React, { forwardRef,useEffect,useState } from 'react'
 import {Form,Input,Select} from 'antd'
 const {Option}  = Select
 const UserForm = forwardRef((props,ref) => {
+
+    // 用于判断 “区域” 输入框是否禁用，对应管理员身份
     const [isDisabled, setisDisabled] = useState(false)
     
+    // 为什么要用副作用来更新状态？props.isUpdateDisabled 改变时
+    // UserForm 不是会自动更新吗？
+    // 因为我们之前已经为 UserForm 设计了 isDisabled状态
+    // 所以我们现在要做的是勾连父子组件状态，而不能简单用子组件的props
+    // 要注意，一定是 props.isUpdateDisabled 前后两次改变了才会触发副作用
     useEffect(()=>{
         setisDisabled(props.isUpdateDisabled)
     },[props.isUpdateDisabled])
 
+    // 添加后端数据库后，roleId 是随机分配的，这里的1、2、3要对应修改成后端的Id
+    // 前端不会添加修改后端 roles Id、name 等属性，所以这个映射关系可以写死
+    // 但后端可能会修改，修改时需要告知我们，然后我们做调整
     const {roleId,region}  = JSON.parse(localStorage.getItem("token"))
     const roleObj = {
-        "6204b0c10dcb9809bcdb3e91":"superadmin",
-        "6204b0c10dcb9809bcdb3e92":"admin",
-        "6204b0c10dcb9809bcdb3e93":"editor"
+        "1":"superadmin",
+        "2":"admin",
+        "3":"editor"
     }
     const checkRegionDisabled = (item)=>{
         if(props.isUpdate){
@@ -30,6 +40,7 @@ const UserForm = forwardRef((props,ref) => {
         }
     }
 
+    // 检查当前用户角色权限，开放相应的区域选项
     const checkRoleDisabled = (item)=>{
         if(props.isUpdate){
             if(roleObj[roleId]==="superadmin"){
@@ -85,7 +96,10 @@ const UserForm = forwardRef((props,ref) => {
             >
                 <Select onChange={(value)=>{
                     // console.log(value)
-                    if(value === '6204b0c10dcb9809bcdb3e91'){
+                    // 添加后端后，1要改成后台的Id
+                    // 绑定在表单角色项 onChange 事件上，也就意味着
+                    // 得选了角色才会去检查是否应该禁用区域项
+                    if(value === 1){
                         setisDisabled(true)
                         ref.current.setFieldsValue({
                             region:""

@@ -31,7 +31,8 @@ export default function NewsEditor(props) {
 
                 onBlur={()=>{
                     // console.log()
-
+                    // 在失去焦点时，将编辑器内容转换成HTML，调用父组件传递的方法
+                    // 将内容存放在父组件的状态 Content 中
                     props.getContent(draftToHtml(convertToRaw(editorState.getCurrentContent())))
                 }}
             />

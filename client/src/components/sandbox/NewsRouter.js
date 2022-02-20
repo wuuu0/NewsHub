@@ -44,18 +44,24 @@ function NewsRouter(props) {
             axios.get("/rights"),
             axios.get("/children"),
         ]).then(res => {
+
+            // BackRouteList 对应的是完整的权限列表
             // console.log(res)
             setBackRouteList([...res[0].data, ...res[1].data])
             // console.log(BackRouteList)
         })
     }, [])
 
+
+    // 根据用户登录信息，取出用户权限
     const { role: { rights } } = JSON.parse(localStorage.getItem("token"))
 
+    // 检查权限是否对应路由组件；检查是否开启，对应我们此前的权限管理中的 switch 开关的功能
     const checkRoute = (item) => {
         return LocalRouterMap[item.key] && (item.pagepermisson || item.routepermisson)
     }
 
+    // 检查用户是否拥有路由权限
     const checkUserPermission = (item) => {
         return rights.includes(item.key)
     }

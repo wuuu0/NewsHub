@@ -17,16 +17,21 @@ export default function UserList() {
     const addForm = useRef(null)
     const updateForm = useRef(null)
     
+    // 获取用户登录信息
     const {roleId,region,username}  = JSON.parse(localStorage.getItem("token"))
 
     useEffect(() => {
+
+        // 添加后端数据库后，roleId 是随机分配的，这里的1、2、3要对应修改成后端的Id
         const roleObj = {
-            "6204b0c10dcb9809bcdb3e91":"superadmin",
-            "6204b0c10dcb9809bcdb3e92":"admin",
-            "6204b0c10dcb9809bcdb3e93":"editor"
+            "1":"superadmin",
+            "2":"admin",
+            "3":"editor"
         }
         axios.get("/users?_expand=role").then(res => {
             const list = res.data
+
+            // 根据当前登录身份，来选择性渲染用户界面 Table
             setdataSource(roleObj[roleId]==="superadmin"?list:[
                 ...list.filter(item=>item.username===username),
                 ...list.filter(item=>item.region===region&& roleObj[item.roleId]==="editor")
@@ -106,15 +111,39 @@ export default function UserList() {
     ];
 
     const handleUpdate = (item)=>{
+
+        // 此处用 setTimeout，主要是让此处的 setisUpdateVisible
+        // 能够同步更新 UpdateVisible 状态，也就是让 Modal 立刻 visible
+        // 因为 Modal 不 visible 的话，在首次渲染时，底层 DOM 可能根本不存在？
+        // 也就意味着子组件 Form 都还不存在，setFieldsValue 自然无法运行
+        // 总之，就是要确保 setFieldsValue 的时候 Form 真实存在
         setTimeout(()=>{
             setisUpdateVisible(true)
-            if(item.roleId==='6204b0c10dcb9809bcdb3e91'){
+
+            // 添加后端数据库后，roleId 是随机分配的，这里的1、2、3要对应修改成后端的Id
+            
+            // 这里需要手动检查预选结果是否应该禁用区域项，不然的话预选
+            // 到管理员也不会禁用区域项，因为一般情况下只会在表单中选角色的时候 onChange
+            // 才会进行检查并禁用区域项
+
+            // 但还有一个特殊情况
+            // 点了 Table 的 非管理员 item，setisUpdateDisabled(false)
+            // 对于 UserForm 来说 props.isUpdateDisabled 从未定义变成 false 进而触发副作用 isDisabled false
+            // 然后在 UserForm 表单上 角色项 选择 管理员，Select onChange 导致 isDisabled true
+            // 点击 Modal 取消/更新，UserForm 仍然 isDisabled true
+            // 再点 Table 的 非管理员 item，setisUpdateDisabled(false)，props.isUpdateDisabled 仍未 false
+            // UserForm 副作用未触发，进而保持 isDisabled true，导致预设的 非管理员item 的表单区域项也被禁用
+            // 通过在点击取消/更新后添加 setisUpdateDisabled(!isUpdateDisabled) 来解决
+            if(item.roleId===1){
                 //禁用
                 setisUpdateDisabled(true)
             }else{
                 //取消禁用
                 setisUpdateDisabled(false)
             }
+            
+            // 由于是修改用户信息，在点击编辑的时候
+            // 最好先将原来的用户信息显示在表单上
             updateForm.current.setFieldsValue(item)
         },0)
 

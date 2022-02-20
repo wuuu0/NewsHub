@@ -73,7 +73,8 @@ export default function RoleList() {
     }, [])
 
 
-
+    // popover 确认之后，隐藏 popover-tree 框
+    // 根据 currentRights ，更新 Table 的表现，并更新后台数据
     const handleOk = ()=>{
         console.log(currentRights,currentId)
         setisModalVisible(false)
@@ -98,16 +99,27 @@ export default function RoleList() {
         setisModalVisible(false)
     }
 
+
+    // 每点一个选项，Tree 组件就会记录当前选中的所有项
+    // checkKeys 形参就是接收点击后的所有选择项
     const onCheck = (checkKeys)=>{
         // console.log(checkKeys)
         setcurrentRights(checkKeys.checked)
     }
     return (
         <div>
+
+            // Table 组件 要求 dataSource 数组的对象都要有 “key” 属性
+            // 当没有 “key” 属性时，要设置 rowKey 属性 指定一个属性代替 “key” 
             <Table dataSource={dataSource} columns={columns}
                 rowKey={(item) => item.id}></Table>
 
+            // Modal 和 Table 的关系更像是并行关系。
+            // 但是 Table 中的按钮控制 Modal 的出现和消失，并且两者共享 currentRights 状态
             <Modal title="权限分配" visible={isModalVisible} onOk={handleOk} onCancel={handleCancel}>
+            
+            // 注意 checkedKeys 和 onCheck 的形参不是一回事
+            // checkedKeys 属性决定了树形复选框的当前勾选表现 
             <Tree
                 checkable
                 checkedKeys = {currentRights}

@@ -40,6 +40,8 @@ export default function RightList() {
         },
         {
             title: "操作",
+
+            // 设置 dataIndex，则会将源数组中的一个完整对象传给 render 的形参  
             render: (item) => {
                 return <div>
                     <Button danger shape="circle" icon={<DeleteOutlined />} onClick={() => confirmMethod(item)} />
@@ -93,8 +95,14 @@ export default function RightList() {
             setdataSource(dataSource.filter(data => data.id !== item.id))
             axios.delete(`/rights/${item.id}`)
         }else{
+
+            // antd-Table 支持树形数据的展示。数据中有 children 字段的时候会自动展示位树形结构。
+            // 且默认情况下 children 数组在表格中的渲染，同样遵循 columns 中的设置
+            // 所以这里 item 对应的是 children 数组中的单个对象；datasource 仍是完整的链接过的表
             let list = dataSource.filter(data=>data.id===item.rightId)
             list[0].children = list[0].children.filter(data=>data.id!==item.id)
+            
+            // 注意，要返回一个新的数组，以确保能识别到 dataSource 有所改变
             setdataSource([...dataSource])
             axios.delete(`/children/${item.id}`)
         }
