@@ -68,7 +68,7 @@ inspire deploy -m "A Message"
 1. 前端需求和数据请求关系
 
 <div align="center">
-<img src="https://s2.loli.net/2022/02/19/xGRH7CwP6s9nZIK.png" width=90%>
+<img src="https://s2.loli.net/2022/02/19/IB35YnE1RiWUjMw.png" width=90%>
 </div>
 
 2. 前端路由结构
@@ -94,6 +94,83 @@ inspire deploy -m "A Message"
 1. 接口 API
 
 详见 ```/doc/api.md```
+
+```
+users
+| - get
+    | - /
+        | - queryString:
+            | - username
+            | - password
+            | - roleState
+            | - _expand=role
+| - post
+    | - /
+| - patch
+    | - /:id
+| - delect
+    | - /:id
+
+roles
+| - get
+    | - /
+| - patch
+    | - /:id
+| - delect
+    | - /:id
+
+children
+| - get
+    | - /
+| - patch
+    | - /:id
+| - delect
+    | - /:id
+
+rights
+| - get
+    | - /
+        | - queryString:
+            | - _embed = children
+| - patch
+    | - /:id
+| - delect
+    | - /:id
+
+categories
+| - get
+    | - /
+| - patch
+    | - /:id
+| - delect
+    | - /:id
+
+regions
+| - get
+    | - /
+
+news
+| - get
+    | - /:id
+        | - queryString:
+            | - _expand=category
+            | - _expand=role
+    | - /
+        | - queryString
+            | - publishState
+            | - author=${username}
+            | - auditState=1
+            | - _expand=category
+            | - _sort=view
+            | - _order=desc
+            | - _limit=6
+| - post
+    | - /
+| - patch
+    | - /:id
+| - delect
+    | - /:id
+```
 
 2. 数据库设计
 
@@ -172,3 +249,4 @@ inspire deploy -m "A Message"
 | star         | Number   | 获赞数            |
 | view         | Number   | 浏览数            |
 | publishTime  | Number   | 发表时间          |
+
