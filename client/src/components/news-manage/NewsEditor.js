@@ -8,6 +8,7 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 export default function NewsEditor(props) {
     useEffect(()=>{
         // console.log(props.content)
+        // NewsUpdate 组件传入的，主要是为了能够显示出已有的news的内容
         // html-===> draft, 
         const html = props.content
         if(html===undefined) return 
