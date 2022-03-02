@@ -2,7 +2,7 @@
 
 ## 项目简介
 
-本项目实现了一个新闻展示+后台管理网站。其中，前端基于 React + Redux + react-router-dom + Ant Design 搭建；后端基于轻服务 express 框架搭建。项目演示地址： https://qcigwi.app.cloudendpoint.cn（测试账号：admin 密码：123456）
+本项目实现了一个新闻展示+后台管理网站。其中，前端基于 React + Redux + react-router-dom + Ant Design 搭建；后端基于轻服务 express 框架搭建。项目演示地址： [https://qcigwi.app.cloudendpoint.cn](https://qcigwi.app.cloudendpoint.cn)（测试账号：admin 密码：123456）
 
 ## 项目初始化
 
