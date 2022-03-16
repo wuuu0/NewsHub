@@ -1,5 +1,8 @@
 import axios from 'axios'
 import {store} from '../redux/store'
+
+// 设置 axios 请求的默认域名和端口，省的每次请求都要输入一次
+// 部署上线后，axios 的默认请求域名和端口需另外设置
 // axios.defaults.baseURL="http://localhost:8080"
 
 // axios.defaults.headers

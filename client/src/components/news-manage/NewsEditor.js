@@ -18,6 +18,23 @@ export default function NewsEditor(props) {
           const editorState = EditorState.createWithContent(contentState);
           setEditorState(editorState)
         }
+        /* 
+        为何要和 props.content 绑定，不是挂载的时候设置一下Editor内容就好了吗?
+
+        考虑纯前端更新？
+        
+        Editor内容变化时，会自己setEditorState更新状态+显示内容
+        且点击 上一步下一步切换后 不会消失
+        （因为我们通过设置display来隐藏，DOM上节点还是存在的）
+        
+        何况，等到真的改变了 props.content（保存草稿、提交审核），
+        路由也已切换，会再次刷新请求后台数据的
+        
+        并且 NewsAdd 中也没有用到这个副作用
+
+        只能说，这里我们是要根据 props.content 来预设内容
+        useEffect 绑定它，功能上一般不会有错
+        */
     },[props.content])
 
     const [editorState, setEditorState] = useState("")
@@ -28,6 +45,7 @@ export default function NewsEditor(props) {
                 toolbarClassName="aaaaa"
                 wrapperClassName="bbbbb"
                 editorClassName="ccccc"
+                // 此 editorState 是代表事件信息的参数，而非组件中的状态 editorState
                 onEditorStateChange={(editorState)=>setEditorState(editorState)}
 
                 onBlur={()=>{
